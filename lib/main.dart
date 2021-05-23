@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'db/init-db.dart';
 
-void main() {
+void main() async {
+
+  initDB();
+
   runApp(MyApp());
 }
 
