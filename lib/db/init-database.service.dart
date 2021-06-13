@@ -5,5 +5,5 @@ void initDB() {
   Parse().initialize(keyApplicationId, keyParseServerUrl,
       clientKey: keyClientKey, autoSendSessionId: true);
 
-  print('done');
+  print('initialised db');
 }

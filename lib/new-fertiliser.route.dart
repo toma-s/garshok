@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:garshok/models/fertiliser.model.dart';
 
-import 'db/database.service.dart';
-import 'models/fertiliser.model.dart';
+import 'db/fertiliser.service.dart';
 
-class FertiliserRoute extends StatelessWidget {
-  const FertiliserRoute({Key key}) : super(key: key);
+class NewFertiliserRoute extends StatelessWidget {
+  const NewFertiliserRoute({Key key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
+  static const String _title = 'Add new fertiliser';
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _StatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController _controller;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var fertiliser = new Fertiliser();
+  var fertiliser = Fertiliser(null, null, null);
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _StatefulWidgetState extends State<MyStatefulWidget> {
             ),
             validator: (String value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter some text';
+                return 'Please enter fertiliser name';
               }
               return null;
             },
@@ -74,7 +74,7 @@ class _StatefulWidgetState extends State<MyStatefulWidget> {
             ),
             validator: (String value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter some number';
+                return 'Please enter fertiliser efficiency duration';
               }
               return null;
             },

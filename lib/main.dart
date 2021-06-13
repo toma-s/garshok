@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:garshok/fertiliser-page.dart';
+import 'package:garshok/new-fertiliser.route.dart';
 import 'db/init-database.service.dart';
-import 'db/database.service.dart';
+import 'db/fertiliser.service.dart';
+import 'fertiliser.route.dart';
 
 void main() {
   initDB();
@@ -63,6 +64,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _addFertiliser,
               child: Text('Add fertiliser'),
             ),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: _listFertilisers,
+              child: Text('List fertilisers'),
+            ),
           ],
         ),
       ),
@@ -70,6 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addFertiliser() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewFertiliserRoute()),
+    );
+  }
+
+  void _listFertilisers() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => FertiliserRoute()),
