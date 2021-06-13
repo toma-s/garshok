@@ -21,12 +21,13 @@ class FertiliserRoute extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.none &&
             snapshot.hasData == null) {
-          // todo message
-          return Container();
+          return NoFertiliserAlertMessage();
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // todo message
-          return Container();
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.data.length == 0) {
+          return NoFertiliserAlertMessage();
         }
         return DataTable(
             columns: const <DataColumn>[
@@ -44,6 +45,33 @@ class FertiliserRoute extends StatelessWidget {
       future: readFertilisers(),
       initialData: [],
     );
+  }
+}
+
+class NoFertiliserAlertMessage extends StatelessWidget {
+  const NoFertiliserAlertMessage({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: const Text('Fertilises list'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: const <Widget>[
+              Text('No fertilisers were found'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Go back'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ]);
   }
 }
 
