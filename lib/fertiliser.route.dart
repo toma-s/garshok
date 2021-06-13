@@ -33,12 +33,35 @@ class FertiliserRoute extends StatelessWidget {
             columns: const <DataColumn>[
               DataColumn(label: Text('Name')),
               DataColumn(label: Text('Duration days')),
+              DataColumn(label: Text('Update')),
+              DataColumn(label: Text('Delete')),
             ],
             rows: List<DataRow>.generate(snapshot.data.length, (int index) {
               Fertiliser fertiliser = snapshot.data[index];
               return DataRow(cells: <DataCell>[
                 DataCell(Text(fertiliser.name)),
                 DataCell(Text(fertiliser.durationDays)),
+                DataCell(
+                  IconButton(
+                    icon: const Icon(Icons.create_outlined),
+                    tooltip: 'Update fertiliser',
+                    onPressed: () {
+                      // todo update
+                    },
+                  ),
+                ),
+                DataCell(
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Delete fertiliser',
+                    onPressed: () {
+                      deleteFertiliser(fertiliser.objectId);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'The selected fertiliser was deleted')));
+                    },
+                  ),
+                ),
               ]);
             }));
       },

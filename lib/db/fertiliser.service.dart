@@ -1,8 +1,10 @@
 import 'package:garshok/models/fertiliser.model.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
+const String _fertiliser = 'Fertiliser';
+
 void createFertiliser(Fertiliser fertiliserData) async {
-  var fertiliser = ParseObject('Fertiliser');
+  var fertiliser = ParseObject(_fertiliser);
   fertiliser.set('name', fertiliserData.name);
   fertiliser.set('durationDays', fertiliserData.durationDays);
   await fertiliser.save();
@@ -10,7 +12,7 @@ void createFertiliser(Fertiliser fertiliserData) async {
 
 Future readFertilisers() async {
   QueryBuilder<ParseObject> queryTodo =
-      QueryBuilder<ParseObject>(ParseObject('Fertiliser'));
+      QueryBuilder<ParseObject>(ParseObject(_fertiliser));
   final ParseResponse apiResponse = await queryTodo.query();
 
   if (!apiResponse.success || apiResponse.results == null) {
@@ -28,28 +30,30 @@ Future readFertilisers() async {
 
 // todo update
 
-// todo delete one
+void deleteFertiliser(String objectId) async {
+  var el = ParseObject(_fertiliser)..objectId = objectId;
+  await el.delete();
+}
 
 void deleteAllFertilisers() async {
   var results = await readFertilisers();
   results.forEach((element) async {
-    var el = ParseObject('Fertiliser')..objectId = element.objectId;
-    await el.delete();
+     deleteFertiliser(element.objectId);
   });
 }
 
 void loadInitFertilisers() async {
-  var fertiliser = ParseObject('Fertiliser');
+  var fertiliser = ParseObject(_fertiliser);
   fertiliser.set('name', 'Sticks');
   fertiliser.set('durationDays', '30');
   await fertiliser.save();
 
-  fertiliser = ParseObject('Fertiliser');
+  fertiliser = ParseObject(_fertiliser);
   fertiliser.set('name', 'Sticks');
   fertiliser.set('durationDays', '60');
   await fertiliser.save();
 
-  fertiliser = ParseObject('Fertiliser')
+  fertiliser = ParseObject(_fertiliser)
     ..set('name', 'Liquid')
     ..set('durationDays', '14');
   await fertiliser.save();
