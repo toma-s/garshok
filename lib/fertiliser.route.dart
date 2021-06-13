@@ -1,10 +1,26 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 import 'db/fertiliser.service.dart';
 import 'models/fertiliser.model.dart';
 
-class FertiliserRoute extends StatelessWidget {
+class FertiliserRoute extends StatefulWidget {
+  @override
+  _FertiliserWidgetState createState() => _FertiliserWidgetState();
+}
+
+class _FertiliserWidgetState extends State<FertiliserRoute> {
   static const String _title = 'Fertilisers';
+  Future _fertilisersListFuture = Future.value([]);
+  bool showSpinner;
+
+  @override
+  Future<void> initState() {
+    super.initState();
+    _fertilisersListFuture = updateList();
+    showSpinner = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,58 +32,88 @@ class FertiliserRoute extends StatelessWidget {
     );
   }
 
+  void setSpinner(bool show) {
+    setState(() {
+      showSpinner = show;
+    });
+  }
+
+  void refreshList() {
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _fertilisersListFuture = updateList();
+      });
+    });
+  }
+
+  Future updateList() {
+    return readFertilisers();
+  }
+
   Widget fertilisersWidget() {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.none &&
-            snapshot.hasData == null) {
-          return NoFertiliserAlertMessage();
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.data.length == 0) {
-          return NoFertiliserAlertMessage();
-        }
-        return DataTable(
-            columns: const <DataColumn>[
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Duration days')),
-              DataColumn(label: Text('Update')),
-              DataColumn(label: Text('Delete')),
-            ],
-            rows: List<DataRow>.generate(snapshot.data.length, (int index) {
-              Fertiliser fertiliser = snapshot.data[index];
-              return DataRow(cells: <DataCell>[
-                DataCell(Text(fertiliser.name)),
-                DataCell(Text(fertiliser.durationDays)),
-                DataCell(
-                  IconButton(
-                    icon: const Icon(Icons.create_outlined),
-                    tooltip: 'Update fertiliser',
-                    onPressed: () {
-                      // todo update
-                    },
-                  ),
-                ),
-                DataCell(
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Delete fertiliser',
-                    onPressed: () {
-                      deleteFertiliser(fertiliser.objectId);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'The selected fertiliser was deleted')));
-                    },
-                  ),
-                ),
-              ]);
-            }));
-      },
-      future: readFertilisers(),
-      initialData: [],
-    );
+    return Center(
+        child: Column(
+      children: <Widget>[
+        showSpinner ? CircularProgressIndicator() : Center(),
+        FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none &&
+                snapshot.hasData == null) {
+              showSpinner = false;
+              return NoFertiliserAlertMessage();
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              showSpinner = false;
+              return CircularProgressIndicator();
+            }
+            if (snapshot.connectionState == ConnectionState.done ||
+                snapshot.data.length > 0) {
+              showSpinner = false;
+
+              return DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('Duration days')),
+                    DataColumn(label: Text('Update')),
+                    DataColumn(label: Text('Delete')),
+                  ],
+                  rows:
+                      List<DataRow>.generate(snapshot.data.length, (int index) {
+                    Fertiliser fertiliser = snapshot.data[index];
+                    return DataRow(cells: <DataCell>[
+                      DataCell(Text(fertiliser.name)),
+                      DataCell(Text(fertiliser.durationDays)),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(Icons.create_outlined),
+                          tooltip: 'Update fertiliser',
+                          onPressed: () {
+                            // todo update
+                          },
+                        ),
+                      ),
+                      DataCell(
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          tooltip: 'Delete fertiliser',
+                          onPressed: () {
+                            setSpinner(true);
+                            refreshList();
+                            deleteFertiliser(fertiliser.objectId);
+                          },
+                        ),
+                      ),
+                    ]);
+                  }));
+            }
+
+            return NoFertiliserAlertMessage();
+          },
+          future: _fertilisersListFuture,
+          // initialData: [],
+        ),
+      ],
+    ));
   }
 }
 
