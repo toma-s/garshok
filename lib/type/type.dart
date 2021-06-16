@@ -1,0 +1,3 @@
+enum UpsertType {
+  Create, Update
+}
