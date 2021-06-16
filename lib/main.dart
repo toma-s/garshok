@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:garshok/new-fertiliser.route.dart';
+import 'package:garshok/type/type.dart';
+import 'package:garshok/upsert-fertiliser.route.dart';
 import 'db/init-database.service.dart';
 import 'db/fertiliser.service.dart';
 import 'fertiliser.route.dart';
+import 'navigator-arguments/upsert-fertiliser.dart';
 
 void main() {
   initDB();
@@ -19,6 +21,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
       ),
       home: MyHomePage(title: 'Garshok'),
+      // routes: {
+      //   UpsertFertiliserRoute.routeName: (context) => UpsertFertiliserRoute(),
+      // },
     );
   }
 }
@@ -80,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addFertiliser() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => NewFertiliserRoute()),
+      MaterialPageRoute(builder: (context) => UpsertFertiliserRoute(UpsertFertiliserArguments(UpsertType.Create))),
     );
   }
 

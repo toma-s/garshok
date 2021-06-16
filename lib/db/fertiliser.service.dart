@@ -10,10 +10,23 @@ void createFertiliser(Fertiliser fertiliserData) async {
   await fertiliser.save();
 }
 
-Future readFertilisers() async {
-  QueryBuilder<ParseObject> queryTodo =
+Future getFertiliserById(objectId) async {
+  QueryBuilder<ParseObject> query =
       QueryBuilder<ParseObject>(ParseObject(_fertiliser));
-  final ParseResponse apiResponse = await queryTodo.query();
+  query.whereContains('objectId', objectId);
+  final ParseResponse apiResponse = await query.query();
+  if (!apiResponse.success || apiResponse.results == null) {
+    return null;
+  }
+  final element = apiResponse.results[0];
+  return Fertiliser(
+      element['objectId'], element['name'], element['durationDays']);
+}
+
+Future getAllFertilisers() async {
+  QueryBuilder<ParseObject> query =
+      QueryBuilder<ParseObject>(ParseObject(_fertiliser));
+  final ParseResponse apiResponse = await query.query();
 
   if (!apiResponse.success || apiResponse.results == null) {
     return [];
@@ -28,7 +41,13 @@ Future readFertilisers() async {
   return output;
 }
 
-// todo update
+Future updateFertiliser(Fertiliser fertiliserData) async {
+  var f = ParseObject(_fertiliser)
+    ..objectId = fertiliserData.objectId
+    ..set('name', fertiliserData.name)
+    ..set('durationDays', fertiliserData.durationDays);
+  await f.save();
+}
 
 void deleteFertiliser(String objectId) async {
   var el = ParseObject(_fertiliser)..objectId = objectId;
@@ -36,9 +55,9 @@ void deleteFertiliser(String objectId) async {
 }
 
 void deleteAllFertilisers() async {
-  var results = await readFertilisers();
+  var results = await getAllFertilisers();
   results.forEach((element) async {
-     deleteFertiliser(element.objectId);
+    deleteFertiliser(element.objectId);
   });
 }
 

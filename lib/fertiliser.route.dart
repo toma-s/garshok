@@ -1,6 +1,7 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
+import 'package:garshok/navigator-arguments/upsert-fertiliser.dart';
+import 'package:garshok/upsert-fertiliser.route.dart';
+import 'package:garshok/type/type.dart';
 
 import 'db/fertiliser.service.dart';
 import 'models/fertiliser.model.dart';
@@ -47,7 +48,7 @@ class _FertiliserWidgetState extends State<FertiliserRoute> {
   }
 
   Future updateList() {
-    return readFertilisers();
+    return getAllFertilisers();
   }
 
   Widget fertilisersWidget() {
@@ -55,6 +56,7 @@ class _FertiliserWidgetState extends State<FertiliserRoute> {
         child: Column(
       children: <Widget>[
         showSpinner ? CircularProgressIndicator() : Center(),
+        // todo refresh when updated
         FutureBuilder(
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.none &&
@@ -66,7 +68,7 @@ class _FertiliserWidgetState extends State<FertiliserRoute> {
               showSpinner = false;
               return CircularProgressIndicator();
             }
-            if (snapshot.connectionState == ConnectionState.done ||
+            if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.data.length > 0) {
               showSpinner = false;
 
@@ -88,7 +90,7 @@ class _FertiliserWidgetState extends State<FertiliserRoute> {
                           icon: const Icon(Icons.create_outlined),
                           tooltip: 'Update fertiliser',
                           onPressed: () {
-                            // todo update
+                            _updateFertiliser(fertiliser.objectId);
                           },
                         ),
                       ),
@@ -106,14 +108,21 @@ class _FertiliserWidgetState extends State<FertiliserRoute> {
                     ]);
                   }));
             }
-
             return NoFertiliserAlertMessage();
           },
           future: _fertilisersListFuture,
-          // initialData: [],
         ),
       ],
     ));
+  }
+
+  void _updateFertiliser(objectId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => UpsertFertiliserRoute(
+              UpsertFertiliserArguments(UpsertType.Update, objectId))),
+    );
   }
 }
 
