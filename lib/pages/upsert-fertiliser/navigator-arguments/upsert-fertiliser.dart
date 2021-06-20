@@ -1,4 +1,4 @@
-import 'package:garshok/type/type.dart';
+import 'package:garshok/pages/upsert-fertiliser/type/type.dart';
 
 class UpsertFertiliserArguments {
   UpsertType upsertType;

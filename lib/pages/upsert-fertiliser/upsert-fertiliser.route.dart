@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garshok/models/fertiliser.model.dart';
-import 'package:garshok/type/type.dart';
+import 'package:garshok/pages/upsert-fertiliser/navigator-arguments/upsert-fertiliser.dart';
+import 'package:garshok/pages/upsert-fertiliser/type/type.dart';
 
-import 'db/fertiliser.service.dart';
-import 'navigator-arguments/upsert-fertiliser.dart';
+import '../../db/fertiliser.service.dart';
 
 class UpsertFertiliserRoute extends StatelessWidget {
   final UpsertFertiliserArguments arguments;

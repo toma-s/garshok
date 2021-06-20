@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:garshok/type/type.dart';
-import 'package:garshok/upsert-fertiliser.route.dart';
-import 'db/init-database.service.dart';
-import 'db/fertiliser.service.dart';
-import 'fertiliser.route.dart';
-import 'navigator-arguments/upsert-fertiliser.dart';
+import 'package:garshok/pages/fertiliser-list/fertiliser-list.route.dart';
+import 'package:garshok/pages/upsert-fertiliser/navigator-arguments/upsert-fertiliser.dart';
+import 'package:garshok/pages/upsert-fertiliser/type/type.dart';
+import 'package:garshok/pages/upsert-fertiliser/upsert-fertiliser.route.dart';
+import '../../db/init-database.service.dart';
+import '../../db/fertiliser.service.dart';
 
 void main() {
   initDB();
