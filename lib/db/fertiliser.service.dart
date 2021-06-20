@@ -72,6 +72,11 @@ void loadInitFertilisers() async {
   fertiliser.set('durationDays', '60');
   await fertiliser.save();
 
+  fertiliser = ParseObject(_fertiliser);
+  fertiliser.set('name', 'Sticks');
+  fertiliser.set('durationDays', '90');
+  await fertiliser.save();
+
   fertiliser = ParseObject(_fertiliser)
     ..set('name', 'Liquid')
     ..set('durationDays', '14');
